@@ -8,7 +8,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ```
 > git clone https://github.com/richdurazo/auth-review
-> cd server
+> cd auth-review
 > npm install
 > npm run dev
 ```
