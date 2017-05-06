@@ -9,10 +9,28 @@ const LocalStrategy = require('passport-local');
 // create local strategy
 const localOptions = { usernameField: 'email' };
 const localLogin = new LocalStrategy(localOptions, function (email, password, done) {
-    // verify this username and pw, call done with user 
+    // verify this email and pw, call done with user 
     // if it is the correct username and pw
     // otherwise call done with false
-})
+    User.findOne({ email: email }, function (err, user) {
+        if (err) { 
+            return done(err); 
+        }
+        if (!user) { 
+            return done(null, false); 
+        }
+        // complare password and user.pw
+        user.comparePassword(password, function (err, isMatch) {
+            if (err) {
+                return done(err);
+            }
+            if (!isMatch) {
+                return done(null, false);
+            }
+            return done(null, user);
+        });
+    });
+});
 
 // setup options for JWT strategy 
 const jwtOptions = {
@@ -43,3 +61,4 @@ const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done) {
 // passport use our strategy
 
 passport.use(jwtLogin);
+passport.use(localLogin);
